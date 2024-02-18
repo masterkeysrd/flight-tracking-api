@@ -1,89 +1,97 @@
 package flight
 
-type FilterFn func(f *Flight, filter *FlightFilter) bool
+type FilterFn func(f *Flight, params *FlightFilterParams) bool
 
-func FilterByBoundingBoxOptional(f *Flight, filter *FlightFilter) bool {
-	if filter.BoundingBox == nil {
+func FilterByBoundingBoxOptional(f *Flight, params *FlightFilterParams) bool {
+	if params.BoundingBox == nil {
 		return true
 	}
 
-	if filter.BoundingBox.SouthWestLatitude == 0 && filter.BoundingBox.SouthWestLongitude == 0 &&
-		filter.BoundingBox.NorthEastLatitude == 0 && filter.BoundingBox.NorthEastLongitude == 0 {
+	if params.BoundingBox.SouthWestLatitude == 0 && params.BoundingBox.SouthWestLongitude == 0 &&
+		params.BoundingBox.NorthEastLatitude == 0 && params.BoundingBox.NorthEastLongitude == 0 {
 		return true
 	}
 
 	return f.IsInBoundingBox(
-		filter.BoundingBox.SouthWestLatitude,
-		filter.BoundingBox.SouthWestLongitude,
-		filter.BoundingBox.NorthEastLatitude,
-		filter.BoundingBox.NorthEastLongitude,
+		params.BoundingBox.SouthWestLatitude,
+		params.BoundingBox.SouthWestLongitude,
+		params.BoundingBox.NorthEastLatitude,
+		params.BoundingBox.NorthEastLongitude,
 	)
 }
 
-func FilterByZoomOptional(f *Flight, filter *FlightFilter) bool {
+func FilterByZoomOptional(f *Flight, params *FlightFilterParams) bool {
 	return true
 }
 
-func FilterByHexOptional(f *Flight, filter *FlightFilter) bool {
-	if filter.Hex == "" {
+func FilterByHexOptional(f *Flight, params *FlightFilterParams) bool {
+	if params.Hex == "" {
 		return true
 	}
 
-	return f.Hex == filter.Hex
+	return f.Hex == params.Hex
 }
 
-func FilterByAirlineICAOOptional(f *Flight, filter *FlightFilter) bool {
-	if filter.AirlineICAO == "" {
+func FilterByRegistrationNumberOptional(f *Flight, params *FlightFilterParams) bool {
+	if params.RegistrationNumber == "" {
 		return true
 	}
 
-	return f.AirlineICAO == filter.AirlineICAO
+	return f.RegistrationNumber == params.RegistrationNumber
 }
 
-func FilterByAirlineIATAOptional(f *Flight, filter *FlightFilter) bool {
-	if filter.AirlineIATA == "" {
+func FilterByAirlineICAOOptional(f *Flight, params *FlightFilterParams) bool {
+	if params.AirlineICAO == "" {
 		return true
 	}
 
-	return f.AirlineIATA == filter.AirlineIATA
+	return f.AirlineICAO == params.AirlineICAO
 }
 
-func FilterByFlagOptional(f *Flight, filter *FlightFilter) bool {
-	if filter.Flag == "" {
+func FilterByAirlineIATAOptional(f *Flight, params *FlightFilterParams) bool {
+	if params.AirlineIATA == "" {
 		return true
 	}
 
-	return f.Flag == filter.Flag
+	return f.AirlineIATA == params.AirlineIATA
 }
 
-func FilterByFlightICAOOptional(f *Flight, filter *FlightFilter) bool {
-	if filter.FlightICAO == "" {
+func FilterByFlagOptional(f *Flight, params *FlightFilterParams) bool {
+	if params.Flag == "" {
 		return true
 	}
 
-	return f.FlightICAO == filter.FlightICAO
+	return f.Flag == params.Flag
 }
 
-func FilterByFlightIATAOptional(f *Flight, filter *FlightFilter) bool {
-	if filter.FlightIATA == "" {
+func FilterByFlightICAOOptional(f *Flight, params *FlightFilterParams) bool {
+	if params.FlightICAO == "" {
 		return true
 	}
 
-	return f.FlightIATA == filter.FlightIATA
+	return f.FlightICAO == params.FlightICAO
 }
 
-func FilterByFlightNumberOptional(f *Flight, filter *FlightFilter) bool {
-	if filter.FlightNumber == "" {
+func FilterByFlightIATAOptional(f *Flight, params *FlightFilterParams) bool {
+	if params.FlightIATA == "" {
 		return true
 	}
 
-	return f.FlightNumber == filter.FlightNumber
+	return f.FlightIATA == params.FlightIATA
 }
 
-func FilterByFlightICAO(f *Flight, filter *FlightFilter) bool {
-	return f.FlightICAO == filter.FlightICAO
+func FilterByFlightNumberOptional(f *Flight, params *FlightFilterParams) bool {
+	if params.FlightNumber == "" {
+		return true
+	}
+
+	return f.FlightNumber == params.FlightNumber
 }
 
-func FilterByFlightIATA(f *Flight, filter *FlightFilter) bool {
-	return f.FlightIATA == filter.FlightIATA
+func FilterByFlightICAO(f *Flight, params *FlightFilterParams) bool {
+	return f.FlightICAO == params.FlightICAO
+}
+
+func FilterByFlightIATA(f *Flight, params *FlightFilterParams) bool {
+	return f.FlightIATA == params.FlightIATA
 }
