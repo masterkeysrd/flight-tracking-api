@@ -9,23 +9,23 @@ import (
 )
 
 type BoundingBox struct {
-	SouthWestLatitude  float64 `json:"south_west_latitude"`
-	SouthWestLongitude float64 `json:"south_west_longitude"`
-	NorthEastLatitude  float64 `json:"north_east_latitude"`
-	NorthEastLongitude float64 `json:"north_east_longitude"`
+	SouthWestLatitude  float64
+	SouthWestLongitude float64
+	NorthEastLatitude  float64
+	NorthEastLongitude float64
 }
 
 type FlightFilterParams struct {
-	BoundingBox        *BoundingBox `json:"bbox"`
-	Zoom               int64        `json:"zoom"`
-	Hex                string       `json:"hex"`
-	RegistrationNumber string       `json:"reg_number"`
-	AirlineICAO        string       `json:"airline_icao"`
-	AirlineIATA        string       `json:"airline_iata"`
-	Flag               string       `json:"flag"`
-	FlightICAO         string       `json:"flight_icao"`
-	FlightIATA         string       `json:"flight_iata"`
-	FlightNumber       string       `json:"flight_number"`
+	BoundingBox        *BoundingBox
+	Zoom               int64
+	Hex                string
+	RegistrationNumber string
+	AirlineICAO        string
+	AirlineIATA        string
+	Flag               string
+	FlightICAO         string
+	FlightIATA         string
+	FlightNumber       string
 }
 
 type Repository interface {
