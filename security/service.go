@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"math/rand"
+	"sync"
 )
 
 type Service interface {
@@ -11,6 +12,7 @@ type Service interface {
 }
 
 type service struct {
+	sync.RWMutex
 	apiKeys []string
 }
 
@@ -30,6 +32,9 @@ func NewService() Service {
 }
 
 func (s *service) ApiKeyExists(ctx context.Context, apiKey string) (bool, error) {
+	s.RLock()
+	defer s.RUnlock()
+
 	for _, key := range s.apiKeys {
 		if key == apiKey {
 			return true, nil

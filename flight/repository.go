@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 )
 
 type BoundingBox struct {
@@ -34,10 +35,14 @@ type Repository interface {
 }
 
 type repository struct {
+	sync.RWMutex
 	flights []*Flight
 }
 
 func (r *repository) GetOne(ctx context.Context, params *FlightFilterParams) (*Flight, error) {
+	r.RLock()
+	defer r.RUnlock()
+
 	log.Printf("flightRepository [GetOne]: %+v", params)
 	filtersFn := []FilterFn{
 		FilterByFlightICAO,
@@ -58,6 +63,9 @@ func (r *repository) GetOne(ctx context.Context, params *FlightFilterParams) (*F
 }
 
 func (r *repository) GetMany(ctx context.Context, params *FlightFilterParams) ([]*Flight, error) {
+	r.RLock()
+	defer r.RUnlock()
+
 	log.Printf("flightRepository [GetMany]: %+v", params)
 	var flights []*Flight
 	var filtersFn = []FilterFn{
