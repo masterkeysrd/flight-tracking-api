@@ -118,3 +118,68 @@ Documentation: Completeness and clarity of the project documentation.
 ### Duration
 
 Allocate no more than 4 hours to this assignment to focus on the core functionalities. The aim is to assess your approach to designing and implementing a scalable backend system rather than completing all features in detail.
+
+## Usage
+
+To run the server, please execute the following from the root directory:
+
+```bash
+export FLIGHT_DATA_FILE=flightdata.json
+export PORT=8080
+go run main.go
+```
+
+The API is protected by a API key. To access the API, you need to pass the API key in the `X-API-KEY` header.  To get the API key, see the console output when you run the server.
+
+To request the getFlightData endpoint, make a POST request to `http://localhost:8080/getFlightData` with the following parameters:
+
+```json
+{
+  "bbox": [0, 0, 90, 90],
+  "zoom": 0,
+  "hex": "780695",
+  "reg_number": "B-5545",
+  "airline_icao": "CSH",
+  "airline_iata": "FM",
+  "flag": "CN",
+  "flight_icao": "CSH9429",
+  "flight_iata": "FM9429",
+  "flight_number": "9429"
+}
+```
+
+> Note: All of the parameters are optional but at least one should be passed.
+
+To request the searchFlightInfo endpoint, make a POST request to `http://localhost:8080/searchFlightInfo` with the following parameters:
+
+```json
+{
+  "flight_icao": "AAL6",
+  "flight_iata": "AA6"
+}
+```
+
+Note: Only one of the parameters is required, the other is optional.
+
+## Assumptions
+
+I used a Modular architecture to separate the concerns of the application, using the Repository, Service, and Mapper pattern to separate the concerns of the application to aim for a clean codebase.
+
+- **Repository**: The repository is responsible for the data access layer of the application. It is responsible for querying the data from the data source and returning the data to the service layer. The repository uses the repository pattern to abstract the data source from the service layer.
+- **Service**: The service layer is responsible for the business logic of the application. It is responsible for processing the data from the repository and returning the data to the controller layer. The service uses the service pattern based on Domain-Driven Design to abstract the business logic from the controller layer.
+- **Mapper**: The mapper layer is responsible for mapping the data from the data source to the data that the service layer can understand. The mapper use the adapter pattern to map the data from the data source to the data that the service layer can understand.
+
+Each of the layers is abstracted from each other using interfaces to allow for easy testing and swapping of implementations, and to allow for easy maintenance and scalability of the application. This uses the SOLID principles to ensure that the application is maintainable and scalable.
+
+For performance, I used a memory cache to store the data from the data source to allow for faster querying of the data. I made the calculation of how many memory can be allocated to a cache based of 1 million records and the size of the data is ~360MB, considering that each `Flight` object is ~328 bytes,
+
+Some features that I would have liked to implement but did not have time to include:
+
+- Indexing the data to allow for faster querying of the data (Using a memory cache).
+- Implementing a pagination feature to allow for the querying of large datasets.
+- Adding more tests to ensure that the application is working as expected.
+- Adding more error handling to ensure that the application is robust and can handle errors gracefully.
+- Mapping the http status codes to the errors to ensure that the application is returning the correct status codes.
+- Implementing a basic authentication instead of using an API key.
+- Adding a openapi documentation to the application to allow for easy documentation of the API.
+- Adding a logger to the application to allow for easy debugging of the application.
