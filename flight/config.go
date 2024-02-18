@@ -1,10 +1,6 @@
-package Flight
+package flight
 
-import (
-	"os"
-)
-
-type struct Config {
+type Config struct {
 	filename string
 }
 
@@ -14,6 +10,6 @@ func (c *Config) Filename() string {
 
 func NewConfig() *Config {
 	return &Config{
-		Filename: os.Getenv("FLIGHT_DATA"),
+		filename: "flight_data.json",
 	}
 }
