@@ -3,16 +3,25 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	"moneda/evaluation/flight"
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/net/http2"
 )
 
 func main() {
+	repository, err := flight.NewRepository(flight.NewConfig())
+
+	if err != nil {
+		panic(err)
+	}
+
 	httpPort := os.Getenv("PORT")
 	e := echo.New()
 
@@ -23,7 +32,19 @@ func main() {
 
 	e.POST("/searchFlightInfo", func(c echo.Context) error {
 		// implement your code how you wish here
-		return nil
+		flightFilter := &flight.FlightFilter{}
+		if err := c.Bind(flightFilter); err != nil {
+			return c.JSON(http.StatusBadRequest, err)
+		}
+
+		log.Printf("searchFlightInfo: %+v", flightFilter)
+
+		flights, err := repository.GetMany(c.Request().Context(), flightFilter)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err)
+		}
+
+		return c.JSON(http.StatusOK, flights)
 	})
 
 	server := &http2.Server{
