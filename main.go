@@ -10,23 +10,33 @@ import (
 	"time"
 
 	"moneda/evaluation/flight"
+	"moneda/evaluation/security"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"golang.org/x/net/http2"
 )
 
 func main() {
-	repository, err := flight.NewRepository(flight.NewConfig())
+	flightRepository, err := flight.NewRepository(flight.NewConfig())
 
 	if err != nil {
 		panic(err)
 	}
 
-	mapper := flight.NewMapper()
-	service := flight.NewService(repository, mapper)
+	flightMapper := flight.NewMapper()
+	flightService := flight.NewService(flightRepository, flightMapper)
+	securityService := security.NewService()
 
 	httpPort := os.Getenv("PORT")
 	e := echo.New()
+
+	e.Use(middleware.KeyAuthWithConfig(middleware.KeyAuthConfig{
+		KeyLookup: "header:X-API-KEY",
+		Validator: func(key string, c echo.Context) (bool, error) {
+			return securityService.ApiKeyExists(c.Request().Context(), key)
+		},
+	}))
 
 	e.POST("/getFlightData", func(c echo.Context) error {
 		// implement your code how you wish here
@@ -36,7 +46,7 @@ func main() {
 			return c.JSON(http.StatusBadRequest, err)
 		}
 
-		resp, err := service.GetFlightData(c.Request().Context(), req)
+		resp, err := flightService.GetFlightData(c.Request().Context(), req)
 
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, err)
@@ -53,7 +63,7 @@ func main() {
 			return c.JSON(http.StatusBadRequest, err)
 		}
 
-		resp, err := service.SearchFlightInfo(c.Request().Context(), req)
+		resp, err := flightService.SearchFlightInfo(c.Request().Context(), req)
 
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, err)
