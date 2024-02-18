@@ -22,29 +22,44 @@ func main() {
 		panic(err)
 	}
 
+	mapper := flight.NewMapper()
+	service := flight.NewService(repository, mapper)
+
 	httpPort := os.Getenv("PORT")
 	e := echo.New()
 
 	e.POST("/getFlightData", func(c echo.Context) error {
 		// implement your code how you wish here
-		return nil
-	})
-
-	e.POST("/searchFlightInfo", func(c echo.Context) error {
-		// implement your code how you wish here
-		flightFilter := &flight.FlightFilter{}
-		if err := c.Bind(flightFilter); err != nil {
+		log.Println("getFlightData, request: ", c.Request().Body)
+		req := &flight.GetFlightDataRequest{}
+		if err := c.Bind(req); err != nil {
 			return c.JSON(http.StatusBadRequest, err)
 		}
 
-		log.Printf("searchFlightInfo: %+v", flightFilter)
+		resp, err := service.GetFlightData(c.Request().Context(), req)
 
-		flights, err := repository.GetMany(c.Request().Context(), flightFilter)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, err)
 		}
 
-		return c.JSON(http.StatusOK, flights)
+		return c.JSON(http.StatusOK, resp)
+	})
+
+	e.POST("/searchFlightInfo", func(c echo.Context) error {
+		// implement your code how you wish here
+		req := &flight.SearchFlightInfoRequest{}
+
+		if err := c.Bind(req); err != nil {
+			return c.JSON(http.StatusBadRequest, err)
+		}
+
+		resp, err := service.SearchFlightInfo(c.Request().Context(), req)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err)
+		}
+
+		return c.JSON(http.StatusOK, resp)
 	})
 
 	server := &http2.Server{
