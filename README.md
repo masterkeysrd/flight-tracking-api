@@ -1,24 +1,34 @@
-# backend-take-home
+# Flight Tracking API
 
-For backend candidates applying to moneda this is your take home assignment
+This is application to test go concepts and some best practices.
 
 ## Objective
 
-Develop a backend service for a flight tracking application that provides real-time flight information using ADS-B data. This service will support frontend features such as searching for flights by ICAO or IATA numbers and visualizing nearby air traffic. The backend should efficiently process and serve flight data to the frontend application.
+Develop a backend service for a flight tracking application that provides real-time
+flight information using ADS-B data. This service will support frontend features
+such as searching for flights by ICAO or IATA numbers and visualizing nearby
+air traffic. The backend should efficiently process and serve flight data to
+the frontend application.
 
 ## Project Requirements
 
 Environment Setup:
 
-- Set up a go environment: <https://go.dev/doc/install>. We recommend using brew for easier install
-- Fork the repo/use the template from: [Take home repo](https://github.com/Moneda-Tech-Group/backend-take-home)
+- Set up a go environment: <https://go.dev/doc/install>. We recommend
+  using brew for easier install
+- Fork the repo/use the template from:
+  [Take home repo](https://github.com/Moneda-Tech-Group/backend-take-home)
 
 API Development:
 
-- Implement a basic server using the provided skeleton code in main.go. You server should implement some kind of basic authentication to protect your endpoints
-- flightdata.json is a json file that will act as your database. You should use this to help power your two endpoints
+- Implement a basic server using the provided skeleton code in main.go.
+  You server should implement some kind of basic authentication to protect your endpoints
+- flightdata.json is a json file that will act as your database.
+  You should use this to help power your two endpoints
 - Implement getFlightData endpoint
-  - This should be a post request that can pass any of these parameters. At least one parameter should be passed or you should return an error if you have an empty parameter request
+  - This should be a post request that can pass any of these parameters.
+    At least one parameter should be passed or you should return an error
+    if you have an empty parameter request
 
   ```text
   bbox              optional Bounding box (South-West Lat, South-West Long, North-East Lat, North-East Long)
@@ -112,12 +122,6 @@ Architecture & Design: Clarity and scalability of the backend architecture.
 Code Quality: Organization, readability, and use of Go best practices.
 Problem-Solving Skills: Creativity and efficiency in solving challenges related to data integration and API performance.
 Documentation: Completeness and clarity of the project documentation.
-
-### Share github to these github users: exs6350, hterrero01
-
-### Duration
-
-Allocate no more than 4 hours to this assignment to focus on the core functionalities. The aim is to assess your approach to designing and implementing a scalable backend system rather than completing all features in detail.
 
 ## Usage
 
